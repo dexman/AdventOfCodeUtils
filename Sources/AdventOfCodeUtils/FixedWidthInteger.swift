@@ -14,11 +14,6 @@ extension FixedWidthInteger {
         return value
     }
 
-    public var hexString: String {
-        let padding = 2 * MemoryLayout<Self>.size
-        return String(format: "%0\(padding)x", [self])
-    }
-
     public var indexesOfSetBits: [Int] {
         var result: [Int] = []
 
@@ -34,5 +29,13 @@ extension FixedWidthInteger {
         }
 
         return result
+    }
+}
+
+extension FixedWidthInteger where Self: CVarArg {
+
+    public var hexString: String {
+        let padding = 2 * MemoryLayout<Self>.size
+        return String(format: "%0\(padding)x", self)
     }
 }
