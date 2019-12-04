@@ -5,6 +5,25 @@
 
 import Foundation
 
+extension BinaryInteger {
+
+    public var digits: [UInt8] {
+        var value = self
+        if Self.isSigned, value < 0 {
+            value *= -1
+        }
+
+        var result: [UInt8] = []
+        result.reserveCapacity(6)
+        while value > 0 {
+            let digit = UInt8(value % 10)
+            result.insert(digit, at: 0)
+            value /= 10
+        }
+        return result
+    }
+}
+
 extension FixedWidthInteger {
 
     public static func parse<S: StringProtocol>(_ text: S, radix: Int = 10) throws -> Self {
