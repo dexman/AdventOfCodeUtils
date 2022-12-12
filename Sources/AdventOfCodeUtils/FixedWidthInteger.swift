@@ -24,6 +24,16 @@ extension BinaryInteger {
     }
 }
 
+extension Int {
+
+    public static func parseHexDigit(_ c: Character) throws -> Self {
+        guard let value = c.hexDigitValue else {
+            throw ParseError<Self>(String(c))
+        }
+        return value
+    }
+}
+
 extension FixedWidthInteger {
 
     public static func parse<S: StringProtocol>(_ text: S, radix: Int = 10) throws -> Self {
