@@ -8,7 +8,13 @@ import Foundation
 /// aStar finds a path from start to goal.
 /// distance(current,neighbor) is the weight of the edge from current to neighbor
 /// heuristicDistance is the heuristic function. h(n) estimates the cost to reach goal from node n.
-public func aStar<Node: Hashable>(start: Node, goal: Node, distance: (Node, Node) -> Int, heuristicDistance: (Node) -> Int, neighbors: (Node) -> Set<Node>) -> [Node]? {
+public func aStar<Node: Hashable>(
+    start: Node,
+    goal: (Node) -> Bool,
+    distance: (Node, Node) -> Int,
+    heuristicDistance: (Node) -> Int,
+    neighbors: (Node) -> Set<Node>
+) -> [Node]? {
     // https://en.wikipedia.org/wiki/A*_search_algorithm
 
     func reconstructPath<Node: Hashable>(_ cameFrom: [Node: Node], _ current: Node) -> [Node] {
@@ -40,9 +46,8 @@ public func aStar<Node: Hashable>(start: Node, goal: Node, distance: (Node, Node
     while let current = openSet.peek {
         // current is the node in openSet having the lowest fScore[] value
 
-        if current == goal {
+        if goal(current) {
             return reconstructPath(cameFrom, current)
-
         }
 
         openSet.pop()
@@ -66,4 +71,20 @@ public func aStar<Node: Hashable>(start: Node, goal: Node, distance: (Node, Node
 
     // Open set is empty but goal was never reached
     return nil
+}
+
+public func aStar<Node: Hashable>(
+    start: Node,
+    goal: Node,
+    distance: (Node, Node) -> Int,
+    heuristicDistance: (Node) -> Int,
+    neighbors: (Node) -> Set<Node>
+) -> [Node]? {
+    aStar(
+        start: start,
+        goal: { $0 == goal },
+        distance: distance,
+        heuristicDistance: heuristicDistance,
+        neighbors: neighbors
+    )
 }
